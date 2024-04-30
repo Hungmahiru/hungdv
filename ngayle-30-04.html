@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngày 30-04</title>
+    <link rel="icon" type="image/x-icon" href="rong.png">
+    <meta name="author" content="Phương Văn Hùng">
+    <style>
+        body{
+            background-color: none;
+            background-image: none;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+        .ngay-le{
+            text-align: center;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 20px;
+            color: red;
+        }
+        h3{
+            opacity: 0;
+            animation: tranin 5s ease-in forwards;
+        }
+        @keyframes tranin{
+            form{opacity: 0;}
+            to{opacity: 1;}
+        }
+        h2{
+            opacity: 0;
+            animation: tadein 8s ease-in forwards;
+        }
+        @keyframes tadein{
+            from{opacity: 0;}
+            to{opacity: 1;}
+        }
+        img{
+            width: 300px;
+            margin-left: -300px;
+            margin-top: 60px;
+            opacity: 0;
+            animation: min2 15s ease-in forwards;
+        }
+        @keyframes min2{
+            from{
+                opacity: 0;
+            }
+            to{
+                opacity: 1;
+            }
+        }
+        h1{
+            padding: 20px;
+            display: block;
+            margin: -140px auto;
+            margin-left: 340px;
+            font-size: 40px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            opacity: 0;
+            animation: min1 15s ease-in forwards;
+        }
+        @keyframes min1 {
+            from{
+                opacity: 0;
+            }
+
+            to{
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ngay-le">
+        <audio autoplay loop>
+            <source src="" type="audio/mpeg">
+        </audio>
+        <h3>30-04-2024</h3>
+        <h2>Thống Nhất Đất Nước</h2>
+        <img src="rong.png" alt="rong">
+        <div>
+            <h1>4</h1>
+            <h1>2</h1>
+            <h1>0</h1>
+            <h1>2</h1>
+        </div>
+        <canvas id="canvas"></canvas>
+    </div>
+    <script>
+        document.body.style.backgroundColor = "black";
+        const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const fireworks = [];
+
+    function createFirework() {
+        const firework = {
+            x: Math.random() * canvas.width,
+            y: canvas.height,
+            color: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`,
+            radius: Math.random() * 2 + 1,
+            speed: Math.random() * 3 + 1,
+            angle: Math.PI / 2,
+            explode: false,
+            particles: []
+        };
+
+        fireworks.push(firework);
+    }
+
+    function createParticles(firework) {
+        for (let i = 0; i < 30; i++) {
+            const particle = {
+                x: firework.x,
+                y: firework.y,
+                color: firework.color,
+                speed: Math.random() * 3 + 1,
+                angle: Math.random() * Math.PI * 2,
+                life: Math.random() * 50 + 50
+            };
+            firework.particles.push(particle);
+        }
+    }
+
+    function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        fireworks.forEach((firework, index) => {
+            if (!firework.explode) {
+                firework.y -= firework.speed;
+                if (firework.y <= canvas.height * 0.5) {
+                    firework.explode = true;
+                    createParticles(firework);
+                }
+                ctx.beginPath();
+                ctx.moveTo(firework.x, firework.y); // Bắt đầu từ vị trí hiện tại của pháo hoa
+                ctx.lineTo(firework.x, firework.y + 10); // Di chuyển đến một vị trí dưới
+                ctx.strokeStyle = firework.color;
+                ctx.stroke();
+            } else {
+                firework.particles.forEach((particle, i) => {
+                    particle.x += Math.cos(particle.angle) * particle.speed;
+                    particle.y += Math.sin(particle.angle) * particle.speed;
+                    particle.life--;
+                    if (particle.life <= 0) {
+                        firework.particles.splice(i, 1);
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2); // Điểm nổ
+                        ctx.fillStyle = particle.color;
+                        ctx.fill();
+                    }
+                });
+                if (firework.particles.length === 0) {
+                    fireworks.splice(index, 1);
+                }
+            }
+        });
+
+        requestAnimationFrame(update);
+    }
+
+    function init() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - 100; /* Giảm chiều cao canvas để tránh che đè tiêu đề */
+        setInterval(createFirework, 2000);
+        update();
+    }
+
+    window.onload = init;
+    window.onresize = function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - 100; /* Giảm chiều cao canvas để tránh che đè tiêu đề */
+    };
+    </script>
+</body>
+</html>
